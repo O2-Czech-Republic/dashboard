@@ -78,6 +78,9 @@ type TypeMeta struct {
 
 	// Scalable represents whether or not an object is scalable.
 	Scalable bool `json:"scalable,omitempty"`
+
+        // Restartable represents wheter or not an object is restartable.
+        Restartable bool `json:"restartable,omitempty"`
 }
 
 // ListMeta describes list of objects, i.e. holds information about pagination options set for the list.
@@ -104,6 +107,7 @@ func NewTypeMeta(kind ResourceKind) TypeMeta {
 	return TypeMeta{
 		Kind:     kind,
 		Scalable: kind.Scalable(),
+                Restartable: kind.Restartable(),
 	}
 }
 
@@ -156,6 +160,24 @@ func (k ResourceKind) Scalable() bool {
 	}
 
 	for _, kind := range scalable {
+		if k == kind {
+			return true
+		}
+	}
+
+	return false
+}
+
+// Restartable method return whether ResourceKind is restartable.
+func (k ResourceKind) Restartable() bool {
+	restartable := []ResourceKind{
+		ResourceKindDeployment,
+		ResourceKindReplicaSet,
+		ResourceKindReplicationController,
+		ResourceKindStatefulSet,
+	}
+
+	for _, kind := range restartable {
 		if k == kind {
 			return true
 		}

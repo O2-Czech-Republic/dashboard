@@ -84,6 +84,25 @@ export class VerberService {
       .subscribe(_ => this.onScale.emit(true), this.handleErrorResponse_.bind(this));
   }
 
+  showRestartDialog(displayName: string, typeMeta: TypeMeta, objectMeta: ObjectMeta): void {
+    const dialogConfig = this.getDialogConfig_(displayName, typeMeta, objectMeta);
+    this.dialog_
+      //.open(RestartResourceDialog, dialogConfig)
+      .open(ScaleResourceDialog, dialogConfig)
+      .afterClosed()
+      .pipe(filter(result => Number.isInteger(result)))
+      .pipe(
+        switchMap(result => {
+          const url = `api/v1/scale/${typeMeta.kind}${objectMeta.namespace ? `/${objectMeta.namespace}` : ''}/${
+            objectMeta.name
+          }/`;
+
+          return this.http_.put(url, result, {params: {scaleBy: result}});
+        })
+      )
+      .subscribe(_ => this.onScale.emit(true), this.handleErrorResponse_.bind(this));
+  }
+
   showTriggerDialog(displayName: string, typeMeta: TypeMeta, objectMeta: ObjectMeta): void {
     const dialogConfig = this.getDialogConfig_(displayName, typeMeta, objectMeta);
     this.dialog_

@@ -97,8 +97,16 @@ export class MenuComponent implements ActionColumn {
     return this.typeMeta.scalable;
   }
 
+  isRestartEnabled(): boolean {
+    return this.typeMeta.restartable;
+  }
+
   onScale(): void {
     this.verber_.showScaleDialog(this.typeMeta.kind, this.typeMeta, this.objectMeta);
+  }
+
+  onRestart(): void {
+    this.verber_.showRestartDialog(this.typeMeta.kind, this.typeMeta, this.objectMeta);
   }
 
   isPinEnabled(): boolean {
