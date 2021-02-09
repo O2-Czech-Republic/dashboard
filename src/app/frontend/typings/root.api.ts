@@ -26,6 +26,7 @@ export enum SupportedResources {
 export interface TypeMeta {
   kind: string;
   scalable?: boolean;
+  restartable?: boolean;
 }
 
 export interface ListMeta {
